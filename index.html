@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #f9f9f7;
+      --surface: #ffffff;
+      --ink:     #111111;
+      --muted:   #888888;
+      --border:  #e2e2e0;
+      --ease:    cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* �"?�"? NAV �"?�"? */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(249,249,247,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 3rem;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+
+    .nav-links { display: flex; gap: 2rem; }
+
+    .nav-links a {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.25s var(--ease);
+    }
+
+    .nav-links a:hover { color: var(--ink); }
+
+    /* �"?�"? HERO / CREATOR �"?�"? */
+    .creator {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 3rem 5rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .creator-photo-wrap {
+      /* double-bezel */
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      background: var(--surface);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .creator-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: calc(1.5rem - 4px);
+      display: block;
+      background: #d8d8d6;
+      /* placeholder pattern */
+    }
+
+    .creator-photo.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .creator-info { display: flex; flex-direction: column; gap: 1.75rem; }
+
+    .creator-eyebrow {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .creator-name {
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+
+    .creator-name strong { font-weight: 600; }
+
+    .creator-bio {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 48ch;
+    }
+
+    .creator-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 0.3rem 0.875rem;
+      background: var(--surface);
+    }
+
+    /* �"?�"? DIVIDER �"?�"? */
+    .divider {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* �"?�"? GALLERY SECTION �"?�"? */
+    .gallery-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 3rem 8rem;
+    }
+
+    /* �"?�"? TABS �"?�"? */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .tab-btn {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: none;
+      border: none;
+      padding: 0.875rem 1.5rem 0.875rem 0;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.25s var(--ease);
+      letter-spacing: 0.01em;
+    }
+
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: var(--ink);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s var(--ease);
+    }
+
+    .tab-btn.active { color: var(--ink); }
+    .tab-btn.active::after { transform: scaleX(1); }
+    .tab-btn:hover { color: var(--ink); }
+
+    /* �"?�"? PHOTO GRID �"?�"? */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .shoot-group {
+      margin-bottom: 3rem;
+    }
+
+    .shoot-group:last-child { margin-bottom: 0; }
+
+    .shoot-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.875rem;
+    }
+
+    .photo-grid {
+      columns: 4;
+      column-gap: 0.625rem;
+    }
+
+    .photo-item {
+      break-inside: avoid;
+      margin-bottom: 0.625rem;
+      border-radius: 0.875rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #e8e8e6;
+      position: relative;
+      transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    }
+
+    .photo-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+    }
+
+    .photo-item:active { transform: scale(0.99); }
+
+    .photo-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: filter 0.4s var(--ease);
+    }
+
+    .photo-item:hover img { filter: brightness(0.9); }
+
+    /* placeholder photo */
+    .ph-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #d4d4d2 0%, #e8e8e6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ph-img-tall { aspect-ratio: 3/4; }
+    .ph-img-wide { aspect-ratio: 16/9; }
+
+    .ph-label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    /* zoom overlay */
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+    }
+
+    .photo-item:hover .photo-overlay { opacity: 1; }
+
+    .zoom-dot {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 9999px;
+      background: rgba(17,17,17,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 2 колонки, одинаковое соо�,но�^ение с�,о�?он */
+    .photo-grid-2col {
+      columns: unset !important;
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.625rem;
+    }
+
+    .photo-grid-2col .photo-item {
+      break-inside: unset;
+      margin-bottom: 0;
+    }
+
+    .photo-grid-2col .photo-item img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      height: auto;
+    }
+
+    /* Blue Waters �?" 4 колонки, 16:9 */
+    .photo-grid-bw {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.625rem;
+    }
+
+    .photo-grid-bw .photo-item {
+      border-radius: 0.875rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #e8e8e6;
+      position: relative;
+      transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    }
+
+    .photo-grid-bw .photo-item:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
+    .photo-grid-bw .photo-item:active { transform: scale(0.99); }
+
+    .photo-grid-bw .photo-item img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.4s var(--ease);
+    }
+
+    .photo-grid-bw .photo-item:hover img { filter: brightness(0.9); }
+
+    /* YouTube thumbnail preview */
+    .yt-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background-size: cover;
+      background-position: center;
+      background-color: #111;
+      position: relative;
+      border-radius: 1rem 1rem 0 0;
+      overflow: hidden;
+    }
+
+    /* видео п�?ев�O�Z в �,абе */
+    .video-thumb-el {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+
+    .play-overlay-v {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      transition: background 0.3s var(--ease);
+    }
+
+    .video-item:hover .play-overlay-v { background: rgba(0,0,0,0.45); }
+
+    /* по�?�,�?е�,ная се�,ка �?" 4 колонки, ве�?�,икал�Oн�<е п�?опо�?�?ии */
+    .photo-grid-portrait {
+      grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .photo-grid-portrait .photo-item img {
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      height: auto;
+    }
+
+    /* квад�?а�,н�<е �"о�,о */
+    .photo-grid-square .photo-item img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      height: auto;
+    }
+
+    /* одинаков�<й �?азме�? все�. �"о�,о в г�?�fппе */
+    .photo-grid-uniform .photo-item img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      height: auto;
+    }
+
+    /* layout: ве�?�,икал�Oн�<е по бокам, квад�?а�,н�<е по �?ен�,�?�f */
+    .photo-grid-sides {
+      columns: unset;
+      display: grid;
+      grid-template-columns: 0.75fr 1fr 1fr 0.75fr;
+      gap: 0.625rem;
+      align-items: center;
+    }
+
+    .photo-grid-sides .photo-item {
+      break-inside: unset;
+      margin-bottom: 0;
+    }
+
+    /* �"?�"? VIDEO GRID �"?�"? */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .video-item {
+      border-radius: 1rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #111;
+      position: relative;
+      transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    }
+
+    .video-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.14);
+    }
+
+    .video-item:active { transform: scale(0.99); }
+
+    /* placeholder video */
+    .ph-video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .play-circle {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s, transform 0.3s var(--ease);
+    }
+
+    .video-item:hover .play-circle {
+      border-color: rgba(255,255,255,0.7);
+      transform: scale(1.1);
+    }
+
+    .ph-video-label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .video-caption {
+      padding: 1rem 1.25rem;
+      background: #111;
+    }
+
+    .video-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .video-tag {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 0.25rem;
+    }
+
+    /* �"?�"? LIGHTBOX �"?�"? */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s var(--ease);
+    }
+
+    #lightbox.open { opacity: 1; pointer-events: all; }
+
+    #lb-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 1rem;
+      display: block;
+      transform: scale(0.96);
+      transition: transform 0.45s var(--ease);
+    }
+
+    #lightbox.open #lb-img { transform: scale(1); }
+
+    .lb-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s;
+    }
+
+    .lb-close:hover { background: rgba(255,255,255,0.18); }
+
+    /* �"?�"? FOOTER �"?�"? */
+    footer {
+      border-top: 1px solid var(--border);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer span { font-size: 0.75rem; color: var(--muted); }
+
+    /* �"?�"? SCROLL REVEAL �"?�"? */
+    .reveal {
+      opacity: 0;
+      transform: translateY(1.5rem);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* �"?�"? RESPONSIVE �"?�"? */
+    @media (max-width: 900px) {
+      .creator {
+        grid-template-columns: 1fr;
+        padding: 4rem 1.5rem 3rem;
+        gap: 2.5rem;
+      }
+      .creator-photo-wrap { max-width: 260px; }
+      nav { padding: 0 1.5rem; }
+      .gallery-section { padding: 3rem 1.5rem 6rem; }
+      .photo-grid { columns: 2; }
+      .video-grid { grid-template-columns: 1fr; }
+      .divider { padding: 0 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+
+    @media (max-width: 560px) {
+      .photo-grid { columns: 1; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Portfolio</div>
+    <div class="nav-links">
+      <a href="#creator">About</a>
+      <a href="#gallery">Gallery</a>
+    </div>
+  </nav>
+
+  <!-- CREATOR -->
+  <div id="creator" class="creator">
+
+    <div class="creator-photo-wrap reveal">
+      <!--
+        �-А�o�.Н�~ src на п�f�,�O к своей �"о�,ог�?а�"ии, нап�?име�?:
+        <img class="creator-photo" src="photo.jpg" alt="Creator" />
+      -->
+      <img class="creator-photo" src="change_the_positioning_of_the_202605261208.jpeg" alt="Илья Глущенко" />
+    </div>
+
+    <div class="creator-info">
+      <span class="creator-eyebrow reveal">AI Content Creator · Dubai</span>
+
+      <h1 class="creator-name reveal">
+        Илья<br /><strong>Глущенко</strong>
+      </h1>
+
+      <p class="creator-bio reveal">
+        Снимаю, монтирую, генерирую. Использую AI там, где это даёт результат — и руки там, где нужен характер. Базируюсь в Дубае, работаю по всему миру.
+      </p>
+
+      <div class="creator-tags reveal">
+        <span class="tag">Video Ads</span>
+        <span class="tag">AI Content</span>
+        <span class="tag">Reels</span>
+        <span class="tag">Photo</span>
+        <span class="tag">Dubai</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="gallery-section">
+
+    <div class="tabs reveal">
+      <button class="tab-btn active" data-tab="photos">Галерея фото</button>
+      <button class="tab-btn" data-tab="videos">Галерея видео</button>
+    </div>
+
+    <!-- PHOTOS TAB -->
+    <div class="tab-panel active" id="tab-photos">
+
+      <!-- С�S�'мка 6 �?" Blue Waters (пе�?вая) -->
+      <div class="shoot-group">
+        <div class="shoot-label">Blue Waters Interior</div>
+        <div class="photo-grid-bw">
+          <div class="photo-item"><img src="photo_5825636285761130054_y.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="DSC01649 (1).jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="DSC09154.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="DSC01706.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153242_696.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153237_649.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153229_516.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153225_168.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153218_881.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153211_468.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153042_111.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153037_564.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153029_926.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_153026_323.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152924_151.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152915_819.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152808_830.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152756_011 (1).jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152751_699.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152710_334.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="IMG_20260605_152655_079.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="DSC08998-HDR.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="DSC09197.jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+          <div class="photo-item"><img src="DSC09222 (1).jpg" alt="" /><div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div></div>
+        </div>
+      </div>
+
+      <!-- С�S�'мка 5 �?" Interior -->
+      <div class="shoot-group">
+        <div class="shoot-label">Interior �?" 2024</div>
+        <div class="photo-grid" style="columns: 2;">
+          <div class="photo-item">
+            <img src="DSC09591.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="DSC09599.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- С�S�'мка 1 �?" KIA Sorento -->
+      <div class="shoot-group">
+        <div class="shoot-label">KIA Sorento �?" Dubai</div>
+        <div class="photo-grid-2col">
+          <div class="photo-item">
+            <img src="IMG-20240413-WA0033.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG-20240413-WA0032.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG-20240413-WA0030.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG-20240413-WA0028.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- С�S�'мка 2 �?" Car Meet -->
+      <div class="shoot-group">
+        <div class="shoot-label">Offset 2024</div>
+        <div class="photo-grid-2col photo-grid-square">
+          <div class="photo-item">
+            <img src="IMG_20241225_012901_628.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG_20241225_012901_725 (1).jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG_20241225_012901_955.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="photo_5825636285761130043_y.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- С�S�'мка 3 �?" Babushka Food -->
+      <div class="shoot-group">
+        <div class="shoot-label">Babushka �?" Food</div>
+        <div class="photo-grid-2col photo-grid-uniform">
+          <div class="photo-item">
+            <img src="BABUSHKA FINAL IMAGE (87).jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="BABUSHKA FINAL IMAGE (86).jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="BABUSHKA FINAL IMAGE (85).jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="PORTF.REST (7) (1).jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- С�S�'мка 4 �?" Mercedes Dubai -->
+      <div class="shoot-group">
+        <div class="shoot-label">Mercedes �?" Dubai</div>
+        <div class="photo-grid photo-grid-sides">
+          <div class="photo-item">
+            <img src="DSC07313.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG_20241225_013707_490.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="IMG_20241225_013707_561.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+          <div class="photo-item">
+            <img src="b811abda-03fc-461f-aab9-1dbff069e37b.jpg" alt="" />
+            <div class="photo-overlay"><div class="zoom-dot"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h4M1 1v4M11 11H7M11 11V7"/></svg></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end tab-photos -->
+
+    <!-- VIDEOS TAB -->
+    <div class="tab-panel" id="tab-videos">
+      <div class="video-grid">
+
+        <div class="video-item" onclick="openYT('v6nhW5MPA6U')">
+          <div class="yt-thumb" style="background-image:url('https://img.youtube.com/vi/v6nhW5MPA6U/maxresdefault.jpg')">
+            <div class="play-overlay-v"><div class="play-circle"><svg width="14" height="14" viewBox="0 0 14 14" fill="rgba(255,255,255,0.9)"><path d="M3 2L12 7 3 12V2Z"/></svg></div></div>
+          </div>
+          <div class="video-caption">
+            <div class="video-title">Serenity Villa Jumeirah Islands</div>
+            <div class="video-tag">Property</div>
+          </div>
+        </div>
+
+        <div class="video-item" onclick="openYT('Gt1buwh8N5o')">
+          <div class="yt-thumb" style="background-image:url('https://img.youtube.com/vi/Gt1buwh8N5o/maxresdefault.jpg')">
+            <div class="play-overlay-v"><div class="play-circle"><svg width="14" height="14" viewBox="0 0 14 14" fill="rgba(255,255,255,0.9)"><path d="M3 2L12 7 3 12V2Z"/></svg></div></div>
+          </div>
+          <div class="video-caption">
+            <div class="video-title">NGN Promo</div>
+            <div class="video-tag">Commercial</div>
+          </div>
+        </div>
+
+        <div class="video-item" onclick="openYT('3bij5MF4ogs')">
+          <div class="yt-thumb" style="background-image:url('https://img.youtube.com/vi/3bij5MF4ogs/maxresdefault.jpg')">
+            <div class="play-overlay-v"><div class="play-circle"><svg width="14" height="14" viewBox="0 0 14 14" fill="rgba(255,255,255,0.9)"><path d="M3 2L12 7 3 12V2Z"/></svg></div></div>
+          </div>
+          <div class="video-caption">
+            <div class="video-title">Dubai Hills Sidra Villa</div>
+            <div class="video-tag">Property</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <div class="divider"></div>
+
+  <footer>
+    <span>Portfolio</span>
+    <span>&copy; 2026</span>
+  </footer>
+
+  <!-- LIGHTBOX (для �"о�,о) -->
+  <div id="lightbox">
+    <button class="lb-close" id="lb-close-btn">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg>
+    </button>
+    <img id="lb-img" src="" alt="" />
+    <div id="lb-yt" style="display:none;width:90vw;max-width:1000px;aspect-ratio:16/9;border-radius:1rem;overflow:hidden;transform:scale(0.96);transition:transform 0.45s cubic-bezier(0.32,0.72,0,1);">
+      <iframe id="lb-yt-frame" src="" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;display:block;"></iframe>
+    </div>
+  </div>
+
+  <script>
+    /* Tabs */
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    /* Scroll reveal */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    /* Lightbox (�"о�,о с �?еал�Oн�<м src) */
+    const lb     = document.getElementById('lightbox');
+    const lbImg  = document.getElementById('lb-img');
+
+    document.querySelectorAll('.photo-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const img = item.querySelector('img');
+        if (!img) return;              // плейс�.олде�? �?" не о�,к�?�<ваем
+        lbImg.src = img.src;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function openVideo(src) {
+      lbImg.style.display = 'none';
+      lbVid.style.display = 'block';
+      lbVid.src = src;
+      lbVid.play();
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openYT(id) {
+      lbImg.style.display = 'none';
+      document.getElementById('lb-yt').style.display = 'block';
+      document.getElementById('lb-yt-frame').src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => { document.getElementById('lb-yt').style.transform = 'scale(1)'; }, 10);
+    }
+
+    function closeLb() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+      document.getElementById('lb-yt').style.transform = 'scale(0.96)';
+      setTimeout(() => {
+        lbImg.src = '';
+        document.getElementById('lb-yt').style.display = 'none';
+        document.getElementById('lb-yt-frame').src = '';
+        lbImg.style.display = 'block';
+      }, 400);
+    }
+
+    document.getElementById('lb-close-btn').addEventListener('click', closeLb);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+  </script>
+
+</body>
+</html>
